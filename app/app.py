@@ -24,25 +24,35 @@ canvas_result = st_canvas(
 )
 
 if canvas_result.image_data is not None:
-    # 1️⃣ Take the grayscale channel (first channel)
-    img = canvas_result.image_data[:, :, 0]
+    # 1️⃣ Take grayscale channel
+    img = canvas_result.image_data[:, :, 0]  # shape (200,200)
 
-    # 2️⃣ Invert colors: make digit white on black background
+    # 2️⃣ Invert colors: white digit on black background
     img = 255 - img
 
-    # 3️⃣ Resize to 8x8 like sklearn digits dataset
+    # 3️⃣ Crop the digit to its bounding box to remove extra black borders
+    coords = np.column_stack(np.where(img > 50))  # pixels > threshold
+    if coords.size > 0:
+        y0, x0 = coords.min(axis=0)
+        y1, x1 = coords.max(axis=0)
+        img = img[y0:y1+1, x0:x1+1]
+    else:
+        img = img  # blank canvas
+
+    # 4️⃣ Resize to 8x8 like sklearn digits dataset
     img_resized = resize(img, (8, 8), anti_aliasing=True)
 
-    # 4️⃣ Scale to 0-16 (digits dataset scale)
+    # 5️⃣ Scale to 0–16 (digits dataset scale)
     img_resized = np.round((img_resized / 255.0) * 16)
 
-    # 5️⃣ Flatten to 1D array
+    # 6️⃣ Flatten to 1D array
     input_array = img_resized.flatten().reshape(1, -1)
 
-    # 6️⃣ Scale using saved scaler
+    # 7️⃣ Scale using saved scaler
     input_scaled = scaler.transform(input_array)
 
-    # 7️⃣ Predict
+    # 8️⃣ Predict
     prediction = model.predict(input_scaled)
 
     st.success(f"Predicted Digit: {prediction[0]}")
+
