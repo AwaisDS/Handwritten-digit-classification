@@ -18,19 +18,11 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600&display=swap');
 
 * { font-family: 'DM Sans', sans-serif; }
-
-html, body, [class*="css"] {
-    background-color: #0d0d0d;
-    color: #f0f0f0;
-}
+html, body, [class*="css"] { background-color: #0d0d0d; color: #f0f0f0; }
 .stApp { background: #0d0d0d; }
-
 h1, h2, h3 { font-family: 'Space Mono', monospace !important; }
 
-.title-block {
-    text-align: center;
-    padding: 2rem 0 1.5rem;
-}
+.title-block { text-align: center; padding: 2rem 0 1.5rem; }
 .title-block h1 {
     font-size: 2.6rem;
     letter-spacing: -0.02em;
@@ -39,12 +31,7 @@ h1, h2, h3 { font-family: 'Space Mono', monospace !important; }
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.3rem;
 }
-.title-block p {
-    color: #555;
-    font-size: 0.85rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-}
+.title-block p { color: #555; font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; }
 
 .pred-card {
     background: linear-gradient(135deg, #161616, #1e1e1e);
@@ -64,67 +51,17 @@ h1, h2, h3 { font-family: 'Space Mono', monospace !important; }
     -webkit-text-fill-color: transparent;
     line-height: 1.0;
 }
-.pred-label {
-    color: #666;
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-top: 0.4rem;
-}
+.pred-label { color: #666; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.4rem; }
 
-.conf-container {
-    background: #131313;
-    border: 1px solid #222;
-    border-radius: 10px;
-    padding: 1rem 1.2rem;
-    margin-top: 0.5rem;
-}
-.conf-title {
-    color: #555;
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 0.7rem;
-}
-.conf-row {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin: 0.28rem 0;
-}
-.conf-lbl {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.8rem;
-    width: 16px;
-    text-align: right;
-    flex-shrink: 0;
-}
-.conf-bg {
-    flex: 1;
-    background: #222;
-    border-radius: 3px;
-    height: 8px;
-    overflow: hidden;
-}
-.conf-fill {
-    height: 100%;
-    border-radius: 3px;
-}
-.conf-pct {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    width: 38px;
-    text-align: right;
-    flex-shrink: 0;
-}
+.conf-container { background: #131313; border: 1px solid #222; border-radius: 10px; padding: 1rem 1.2rem; margin-top: 0.5rem; }
+.conf-title { color: #555; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.7rem; }
+.conf-row { display: flex; align-items: center; gap: 0.6rem; margin: 0.28rem 0; }
+.conf-lbl { font-family: 'Space Mono', monospace; font-size: 0.8rem; width: 16px; text-align: right; flex-shrink: 0; }
+.conf-bg { flex: 1; background: #222; border-radius: 3px; height: 8px; overflow: hidden; }
+.conf-fill { height: 100%; border-radius: 3px; }
+.conf-pct { font-family: 'Space Mono', monospace; font-size: 0.7rem; width: 38px; text-align: right; flex-shrink: 0; }
 
-.hint {
-    color: #444;
-    font-size: 0.78rem;
-    text-align: center;
-    margin: 0.3rem 0 1rem;
-    letter-spacing: 0.04em;
-}
+.hint { color: #444; font-size: 0.78rem; text-align: center; margin: 0.3rem 0 1rem; letter-spacing: 0.04em; }
 
 .stButton > button {
     width: 100%;
@@ -142,37 +79,19 @@ h1, h2, h3 { font-family: 'Space Mono', monospace !important; }
 .stButton > button:hover { opacity: 0.85 !important; }
 
 .err-box {
-    background: #180f0f;
-    border: 1px solid #4a1a1a;
-    border-left: 4px solid #ff4f4f;
-    border-radius: 8px;
-    padding: 0.9rem 1.2rem;
-    color: #ff8a8a;
-    font-size: 0.85rem;
-    margin-top: 1rem;
+    background: #180f0f; border: 1px solid #4a1a1a;
+    border-left: 4px solid #ff4f4f; border-radius: 8px;
+    padding: 0.9rem 1.2rem; color: #ff8a8a; font-size: 0.85rem; margin-top: 1rem;
 }
-
-.preview-label {
-    color: #444;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-align: center;
-    margin: 0.8rem 0 0.3rem;
-}
+.preview-label { color: #444; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; margin: 0.8rem 0 0.3rem; }
 
 #MainMenu, footer { visibility: hidden; }
-
-section[data-testid="stSidebar"] {
-    background: #111 !important;
-    border-right: 1px solid #1e1e1e;
-}
+section[data-testid="stSidebar"] { background: #111 !important; border-right: 1px solid #1e1e1e; }
 </style>
 """, unsafe_allow_html=True)
 
 
 # ── Load Model ─────────────────────────────────────────────────────────────
-
 @st.cache_resource
 def load_model():
     try:
@@ -185,8 +104,8 @@ def load_model():
                 with open(path, "rb") as f:
                     return pickle.load(f)
 
-        model  = smart_load("C:\\Users\\pc\\Desktop\\Handwritten-digit-classification\\models\\svm_model.pkl")
-        scaler = smart_load("C:\\Users\\pc\\Desktop\\Handwritten-digit-classification\\models\\scaler.pkl")
+        model  = smart_load("C:\\Users\\pc\\Desktop\\Handwritten-digit-classification\\models\\mnist_svm_model.pkl")
+        scaler = smart_load("C:\\Users\\pc\\Desktop\\Handwritten-digit-classification\\models\\mnist_scaler.pkl")
         return model, scaler, None
 
     except FileNotFoundError as e:
@@ -194,56 +113,35 @@ def load_model():
     except Exception as e:
         return None, None, str(e)
 
-# @st.cache_resource
-# def load_model():
-#     try:
-#         with open("C:\\Users\\pc\\Desktop\\Handwritten-digit-classification\\models\\svm_model.pkl", "rb") as f:
-#             model = pickle.load(f)
-#         with open("C:\\Users\\pc\\Desktop\\Handwritten-digit-classification\\models\\scaler.pkl", "rb") as f:
-#             scaler = pickle.load(f)
-#         return model, scaler, None
-#     except FileNotFoundError as e:
-#         return None, None, str(e)
-
 
 model, scaler, load_error = load_model()
 
 
-# TEMPORARY DEBUG — paste after load_model() call, remove later
-
-# Paste this temporarily in your app to see what training digits look like
-from sklearn.datasets import load_digits
-import matplotlib.pyplot as plt
-
-digits = load_digits()
-fig, axes = plt.subplots(2, 10, figsize=(12, 3))
-for i in range(10):
-    # show first 2 examples of each digit
-    idx1 = np.where(digits.target == i)[0][0]
-    idx2 = np.where(digits.target == i)[0][1]
-    axes[0, i].imshow(digits.images[idx1], cmap='gray')
-    axes[0, i].set_title(str(i))
-    axes[0, i].axis('off')
-    axes[1, i].imshow(digits.images[idx2], cmap='gray')
-    axes[1, i].axis('off')
-plt.savefig("training_samples.png")
-st.image("training_samples.png")
-
-# ── Preprocessing ──────────────────────────────────────────────────────────
+# ── Preprocessing — matches your training pipeline exactly ─────────────────
+#
+#   Training pipeline:
+#     1. X / 255.0          → normalize to 0–1
+#     2. reshape(-1, 28*28) → flatten to 784
+#     3. StandardScaler     → zero mean, unit variance
+#
+#   So here we do the same:
+#     Canvas (RGBA) → grayscale → 28×28 → /255.0 → flatten → scaler.transform()
+#
 def preprocess_canvas(image_data):
+    # 1. Convert RGBA canvas to grayscale
     img = Image.fromarray(image_data.astype("uint8"), "RGBA").convert("L")
     arr = np.array(img, dtype=np.float64)
 
-    # Crop to bounding box
+    # 2. Crop tightly around the drawn stroke
     non_zero = np.where(arr > 10)
     if len(non_zero[0]) == 0:
-        return np.zeros((1, 64)), np.zeros((8, 8))
+        return np.zeros((1, 784)), np.zeros((28, 28))
 
     top, bottom = non_zero[0].min(), non_zero[0].max()
     left, right  = non_zero[1].min(), non_zero[1].max()
     arr = arr[top:bottom+1, left:right+1]
 
-    # Make it square so digit isn't squished
+    # 3. Make bounding box square (prevents squishing)
     h, w = arr.shape
     size = max(h, w)
     square = np.zeros((size, size), dtype=np.float64)
@@ -251,84 +149,53 @@ def preprocess_canvas(image_data):
     x_off = (size - w) // 2
     square[y_off:y_off+h, x_off:x_off+w] = arr
 
-    # Add padding
+    # 4. Add padding (~20%) so digit isn't touching edges
     pad = size // 5
     square = np.pad(square, pad, mode='constant', constant_values=0)
 
-    # Resize to 8x8
-    img_resized = Image.fromarray(square.astype(np.uint8)).resize((8, 8), Image.LANCZOS)
-    arr8 = np.array(img_resized, dtype=np.float64)
+    # 5. Resize to 28×28
+    img_resized = Image.fromarray(square.astype(np.uint8)).resize((28, 28), Image.LANCZOS)
+    arr28 = np.array(img_resized, dtype=np.float64)
 
-    # ✅ Scale to 0-16 to match sklearn digits training data range
-    if arr8.max() > 0:
-        arr8 = arr8 / arr8.max() * 16.0
+    # 6. Normalize to 0–1  ✅ matches X_train / 255.0
+    arr28 = arr28 / 255.0
 
-    return arr8.flatten().reshape(1, -1), arr8
+    # 7. Flatten to 784  ✅ matches reshape(-1, 28*28)
+    flat = arr28.flatten().reshape(1, -1)
+
+    return flat, arr28
 
 
 def run_predict(flat):
-    """
-    Predict with confidence boosting — tries slight variations
-    of the 8x8 input and picks the most confident result.
-    """
-    arr8 = flat.reshape(8, 8)
-    
-    candidates = []
-    
-    # Original
-    candidates.append(flat.copy())
-    
-    # Slight brightness variations
-    candidates.append(np.clip(arr8 * 0.85, 0, 16).flatten().reshape(1, -1))
-    candidates.append(np.clip(arr8 * 1.15, 0, 16).flatten().reshape(1, -1))
-    
-    # Slight shifts (1 pixel in each direction)
-    for dy, dx in [(-1,0),(1,0),(0,-1),(0,1)]:
-        shifted = np.roll(np.roll(arr8, dy, axis=0), dx, axis=1)
-        candidates.append(shifted.flatten().reshape(1, -1))
-    
-    best_digit = None
-    best_conf  = -1
-    best_proba = None
-    
-    for candidate in candidates:
-        scaled = scaler.transform(candidate)
-        digit  = int(model.predict(scaled)[0])
-        
-        proba = None
-        if hasattr(model, "predict_proba"):
-            proba = model.predict_proba(scaled)[0]
-            conf  = proba[digit]
-        elif hasattr(model, "decision_function"):
-            scores = model.decision_function(scaled)[0]
-            scores -= scores.max()
-            exp_s  = np.exp(scores)
-            proba  = exp_s / exp_s.sum()
-            conf   = proba[digit]
-        else:
-            conf = 1.0
-        
-        if conf > best_conf:
-            best_conf  = conf
-            best_digit = digit
-            best_proba = proba
-    
-    return best_digit, best_proba
+    # 8. StandardScaler transform  ✅ matches scaler.transform(X)
+    scaled = scaler.transform(flat)
+    digit  = int(model.predict(scaled)[0])
+
+    proba = None
+    if hasattr(model, "predict_proba"):
+        proba = model.predict_proba(scaled)[0]
+    elif hasattr(model, "decision_function"):
+        scores = model.decision_function(scaled)[0]
+        scores -= scores.max()
+        exp_s  = np.exp(scores)
+        proba  = exp_s / exp_s.sum()
+
+    return digit, proba
 
 
 # ── Sidebar ────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("### ⚙️ Settings")
     st.markdown("---")
-    stroke_width = st.slider("Brush size", 8, 30, 18, step=2)
-    show_8x8 = st.checkbox("Show 8×8 model input", value=True)
+    stroke_width = st.slider("Brush size", 10, 40, 22, step=2)
+    show_28x28   = st.checkbox("Show 28×28 model input", value=True)
     st.markdown("---")
     st.markdown("""
     <div style='color:#4a4a4a; font-size:0.78rem; line-height:1.7;'>
-    <b style='color:#666'>How it works</b><br><br>
-    Your drawing is cropped, padded, and resized to
-    <b style='color:#888'>8×8 pixels</b> — the same format as sklearn's
-    digits dataset — then fed to your trained model.
+    <b style='color:#666'>Preprocessing pipeline</b><br><br>
+    Canvas → crop → 28×28<br>
+    → ÷255 → flatten (784)<br>
+    → StandardScaler → model
     </div>
     """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
@@ -336,7 +203,7 @@ with st.sidebar:
         st.markdown(f"""
         <div style='background:#161616;border:1px solid #222;border-radius:8px;
                     padding:0.7rem 1rem;font-size:0.78rem;color:#666;'>
-        ✅ <span style='color:#4fffb0'>Model loaded</span><br>
+        ✅ <span style='color:#4fffb0'>MNIST model loaded</span><br>
         <span style='color:#444'>Type:</span>
         <span style='color:#aaa'>{type(model).__name__}</span>
         </div>""", unsafe_allow_html=True)
@@ -346,7 +213,7 @@ with st.sidebar:
 st.markdown("""
 <div class="title-block">
     <h1>DIGIT RECOGNIZER</h1>
-    <p>Draw · Predict · sklearn digits</p>
+    <p>MNIST · 28×28 · Draw & Predict</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -354,12 +221,11 @@ if load_error:
     st.markdown(f"""
     <div class="err-box">
     ⚠️ <b>Model files not found:</b> {load_error}<br><br>
-    Place <code>model.pkl</code> and <code>scaler.pkl</code> in the
-    <b>same folder</b> as <code>app.py</code>, then restart.
+    Place <code>mnist_model.pkl</code> and <code>mnist_scaler.pkl</code>
+    in the <b>same folder</b> as <code>app.py</code>, then restart.
     </div>""", unsafe_allow_html=True)
     st.stop()
 
-# Two-column layout
 col_left, col_right = st.columns([1.1, 1])
 
 with col_left:
@@ -371,8 +237,8 @@ with col_left:
         stroke_width=stroke_width,
         stroke_color="#FFFFFF",
         background_color="#000000",
-        height=280,
-        width=280,
+        height=300,
+        width=300,
         drawing_mode="freedraw",
         key="canvas",
         display_toolbar=True,
@@ -400,18 +266,18 @@ with col_right:
                 flat, thumb = preprocess_canvas(img_data)
                 digit, proba = run_predict(flat)
 
-            # Prediction result card
+            # Prediction result
             st.markdown(f"""
             <div class="pred-card">
                 <div class="pred-digit">{digit}</div>
                 <div class="pred-label">Predicted Digit</div>
             </div>""", unsafe_allow_html=True)
 
-            # 8×8 preview
-            if show_8x8:
-                st.markdown('<p class="preview-label">8×8 input sent to model</p>',
+            # 28×28 preview
+            if show_28x28:
+                st.markdown('<p class="preview-label">28×28 input sent to model</p>',
                             unsafe_allow_html=True)
-                thumb_display = (np.clip(thumb / 16.0, 0, 1) * 255).astype(np.uint8)
+                thumb_display = (np.clip(thumb, 0, 1) * 255).astype(np.uint8)
                 thumb_img = Image.fromarray(
                     cv2.resize(thumb_display, (112, 112),
                                interpolation=cv2.INTER_NEAREST)
@@ -425,18 +291,15 @@ with col_right:
                 bars = '<div class="conf-container"><div class="conf-title">Confidence per digit</div>'
                 for i, p in enumerate(proba):
                     pct = p * 100
-                    is_pred = (i == digit)
+                    is_pred    = (i == digit)
                     lbl_color  = "#e0ff4f" if is_pred else "#444"
-                    fill_color = ("linear-gradient(90deg,#e0ff4f,#4fffb0)"
-                                  if is_pred else "#2a2a2a")
+                    fill_color = "linear-gradient(90deg,#e0ff4f,#4fffb0)" if is_pred else "#2a2a2a"
                     pct_color  = "#e0ff4f" if is_pred else "#444"
                     bars += f"""
                     <div class="conf-row">
                         <span class="conf-lbl" style="color:{lbl_color}">{i}</span>
                         <div class="conf-bg">
-                            <div class="conf-fill"
-                                 style="width:{pct:.1f}%;background:{fill_color};">
-                            </div>
+                            <div class="conf-fill" style="width:{pct:.1f}%;background:{fill_color};"></div>
                         </div>
                         <span class="conf-pct" style="color:{pct_color}">{pct:.0f}%</span>
                     </div>"""
