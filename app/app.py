@@ -1,10 +1,9 @@
 import streamlit as st
 import numpy as np
 import pickle
+from streamlit_drawable_canvas import st_canvas
 from PIL import Image, ImageOps
 import cv2
-import base64
-import io
 
 # ── Page Config ────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -62,6 +61,8 @@ h1, h2, h3 { font-family: 'Space Mono', monospace !important; }
 .conf-fill { height: 100%; border-radius: 3px; }
 .conf-pct { font-family: 'Space Mono', monospace; font-size: 0.7rem; width: 38px; text-align: right; flex-shrink: 0; }
 
+.hint { color: #444; font-size: 0.78rem; text-align: center; margin: 0.3rem 0 1rem; letter-spacing: 0.04em; }
+
 .stButton > button {
     width: 100%;
     background: linear-gradient(135deg, #e0ff4f, #4fffb0) !important;
@@ -116,172 +117,31 @@ def load_model():
 model, scaler, load_error = load_model()
 
 
-# ── HTML5 Canvas Component ─────────────────────────────────────────────────
-def drawing_canvas(width=300, height=300, stroke_width=18):
-    """
-    Pure HTML5 canvas — no external package needed.
-    Returns base64 PNG string of what was drawn.
-    """
-    canvas_html = f"""
-    <style>
-        #canvas-wrapper {{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }}
-        #draw-canvas {{
-            border: 2px solid #2a2a2a;
-            border-radius: 10px;
-            cursor: crosshair;
-            background: #000;
-            touch-action: none;
-        }}
-        .canvas-btns {{
-            display: flex;
-            gap: 8px;
-            width: {width}px;
-        }}
-        .canvas-btn {{
-            flex: 1;
-            padding: 7px 0;
-            border: 1px solid #333;
-            border-radius: 6px;
-            background: #1a1a1a;
-            color: #aaa;
-            font-family: 'Space Mono', monospace;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }}
-        .canvas-btn:hover {{ background: #2a2a2a; color: #fff; }}
-        #canvas-output {{ display: none; }}
-    </style>
-
-    <div id="canvas-wrapper">
-        <canvas id="draw-canvas" width="{width}" height="{height}"></canvas>
-        <div class="canvas-btns">
-            <button class="canvas-btn" onclick="clearCanvas()">🗑 Clear</button>
-            <button class="canvas-btn" onclick="undoLast()">↩ Undo</button>
-            <button class="canvas-btn" onclick="saveCanvas()">✅ Save for Predict</button>
-        </div>
-        <input type="text" id="canvas-output">
-    </div>
-
-    <script>
-        const canvas  = document.getElementById('draw-canvas');
-        const ctx     = canvas.getContext('2d');
-        let painting  = false;
-        let paths     = [];
-        let current   = [];
-        const SW      = {stroke_width};
-
-        ctx.strokeStyle = '#FFFFFF';
-        ctx.lineWidth   = SW;
-        ctx.lineCap     = 'round';
-        ctx.lineJoin    = 'round';
-
-        function getPos(e) {{
-            const r = canvas.getBoundingClientRect();
-            if (e.touches) {{
-                return {{
-                    x: e.touches[0].clientX - r.left,
-                    y: e.touches[0].clientY - r.top
-                }};
-            }}
-            return {{ x: e.clientX - r.left, y: e.clientY - r.top }};
-        }}
-
-        function startPaint(e) {{
-            e.preventDefault();
-            painting = true;
-            current  = [];
-            const p  = getPos(e);
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            current.push(p);
-        }}
-
-        function draw(e) {{
-            if (!painting) return;
-            e.preventDefault();
-            const p = getPos(e);
-            ctx.lineTo(p.x, p.y);
-            ctx.stroke();
-            current.push(p);
-        }}
-
-        function stopPaint(e) {{
-            if (!painting) return;
-            painting = false;
-            paths.push([...current]);
-            current  = [];
-        }}
-
-        function redraw() {{
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            paths.forEach(path => {{
-                if (path.length < 2) return;
-                ctx.beginPath();
-                ctx.moveTo(path[0].x, path[0].y);
-                path.slice(1).forEach(p => {{ ctx.lineTo(p.x, p.y); ctx.stroke(); }});
-            }});
-        }}
-
-        function clearCanvas() {{
-            paths = [];
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            document.getElementById('canvas-output').value = '';
-            window.parent.postMessage({{type: 'canvas_data', data: ''}}, '*');
-        }}
-
-        function undoLast() {{
-            paths.pop();
-            redraw();
-        }}
-
-        function saveCanvas() {{
-            const data = canvas.toDataURL('image/png');
-            document.getElementById('canvas-output').value = data;
-            // Send to Streamlit via query param trick
-            window.parent.postMessage({{type: 'streamlit:setComponentValue', value: data}}, '*');
-        }}
-
-        canvas.addEventListener('mousedown',  startPaint);
-        canvas.addEventListener('mousemove',  draw);
-        canvas.addEventListener('mouseup',    stopPaint);
-        canvas.addEventListener('mouseleave', stopPaint);
-        canvas.addEventListener('touchstart', startPaint, {{passive: false}});
-        canvas.addEventListener('touchmove',  draw,       {{passive: false}});
-        canvas.addEventListener('touchend',   stopPaint);
-    </script>
-    """
-    result = st.components.v1.html(canvas_html, height=height + 80, scrolling=False)
-    return result
-
-
-# ── Preprocessing ──────────────────────────────────────────────────────────
-def preprocess_image(image_data_b64):
-    """
-    Decode base64 PNG → match training pipeline exactly:
-    grayscale → crop → 28×28 → /255.0 → flatten(784) → scaler.transform()
-    """
-    # Decode base64
-    header, data = image_data_b64.split(',', 1)
-    img_bytes = base64.b64decode(data)
-    img = Image.open(io.BytesIO(img_bytes)).convert("L")
+# ── Preprocessing — matches your training pipeline exactly ─────────────────
+#
+#   Training pipeline:
+#     1. X / 255.0          → normalize to 0–1
+#     2. reshape(-1, 28*28) → flatten to 784
+#     3. StandardScaler     → zero mean, unit variance
+#
+#   So here we do the same:
+#     Canvas (RGBA) → grayscale → 28×28 → /255.0 → flatten → scaler.transform()
+#
+def preprocess_canvas(image_data):
+    # 1. Convert RGBA canvas to grayscale
+    img = Image.fromarray(image_data.astype("uint8"), "RGBA").convert("L")
     arr = np.array(img, dtype=np.float64)
 
-    # Crop to bounding box of stroke
+    # 2. Crop tightly around the drawn stroke
     non_zero = np.where(arr > 10)
     if len(non_zero[0]) == 0:
-        return None, None
+        return np.zeros((1, 784)), np.zeros((28, 28))
 
     top, bottom = non_zero[0].min(), non_zero[0].max()
     left, right  = non_zero[1].min(), non_zero[1].max()
     arr = arr[top:bottom+1, left:right+1]
 
-    # Make square
+    # 3. Make bounding box square (prevents squishing)
     h, w = arr.shape
     size = max(h, w)
     square = np.zeros((size, size), dtype=np.float64)
@@ -289,25 +149,25 @@ def preprocess_image(image_data_b64):
     x_off = (size - w) // 2
     square[y_off:y_off+h, x_off:x_off+w] = arr
 
-    # Add padding
+    # 4. Add padding (~20%) so digit isn't touching edges
     pad = size // 5
     square = np.pad(square, pad, mode='constant', constant_values=0)
 
-    # Resize to 28×28
+    # 5. Resize to 28×28
     img_resized = Image.fromarray(square.astype(np.uint8)).resize((28, 28), Image.LANCZOS)
     arr28 = np.array(img_resized, dtype=np.float64)
 
-    # Normalize to 0–1  ✅ matches X / 255.0
+    # 6. Normalize to 0–1  ✅ matches X_train / 255.0
     arr28 = arr28 / 255.0
 
-    # Flatten to 784  ✅ matches reshape(-1, 28*28)
+    # 7. Flatten to 784  ✅ matches reshape(-1, 28*28)
     flat = arr28.flatten().reshape(1, -1)
 
     return flat, arr28
 
 
 def run_predict(flat):
-    # StandardScaler  ✅ matches scaler.transform(X)
+    # 8. StandardScaler transform  ✅ matches scaler.transform(X)
     scaled = scaler.transform(flat)
     digit  = int(model.predict(scaled)[0])
 
@@ -332,9 +192,9 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("""
     <div style='color:#4a4a4a; font-size:0.78rem; line-height:1.7;'>
-    <b style='color:#666'>Pipeline</b><br><br>
+    <b style='color:#666'>Preprocessing pipeline</b><br><br>
     Canvas → crop → 28×28<br>
-    → ÷255 → flatten(784)<br>
+    → ÷255 → flatten (784)<br>
     → StandardScaler → model
     </div>
     """, unsafe_allow_html=True)
@@ -362,64 +222,71 @@ if load_error:
     <div class="err-box">
     ⚠️ <b>Model files not found:</b> {load_error}<br><br>
     Place <code>mnist_model.pkl</code> and <code>mnist_scaler.pkl</code>
-    in the same folder as <code>app.py</code>.
+    in the <b>same folder</b> as <code>app.py</code>, then restart.
     </div>""", unsafe_allow_html=True)
     st.stop()
 
 col_left, col_right = st.columns([1.1, 1])
 
 with col_left:
-    st.markdown('<p style="color:#444;font-size:0.78rem;text-align:center;margin-bottom:0.5rem;">✏️ Draw a digit then click Save for Predict</p>',
+    st.markdown('<p class="hint">✏️ Draw a digit (0–9) in the box below</p>',
                 unsafe_allow_html=True)
-    drawing_canvas(width=300, height=300, stroke_width=stroke_width)
 
-    # File uploader as fallback input method
-    st.markdown('<p style="color:#333;font-size:0.72rem;text-align:center;margin-top:1rem;">— or upload an image —</p>',
-                unsafe_allow_html=True)
-    uploaded = st.file_uploader("", type=["png", "jpg", "jpeg"], label_visibility="collapsed")
+    canvas_result = st_canvas(
+        fill_color="rgba(0,0,0,0)",
+        stroke_width=stroke_width,
+        stroke_color="#FFFFFF",
+        background_color="#000000",
+        height=300,
+        width=300,
+        drawing_mode="freedraw",
+        key="canvas",
+        display_toolbar=True,
+    )
 
+    st.markdown("<br>", unsafe_allow_html=True)
     predict_btn = st.button("🔍  PREDICT DIGIT", use_container_width=True)
+    st.markdown(
+        '<p style="color:#333;font-size:0.72rem;text-align:center;margin-top:0.4rem;">'
+        'Use the toolbar above the canvas to undo / clear</p>',
+        unsafe_allow_html=True
+    )
 
 with col_right:
     if predict_btn:
-        # Get canvas data from session state
-        canvas_data = st.session_state.get("canvas_img", None)
+        img_data = canvas_result.image_data
 
-        # Prefer uploaded file
-        if uploaded is not None:
-            img = Image.open(uploaded).convert("L")
-            arr = np.array(img, dtype=np.float64)
-            non_zero = np.where(arr > 10)
-            if len(non_zero[0]) > 0:
-                top, bottom = non_zero[0].min(), non_zero[0].max()
-                left, right  = non_zero[1].min(), non_zero[1].max()
-                arr = arr[top:bottom+1, left:right+1]
-            h, w = arr.shape
-            size = max(h, w)
-            square = np.zeros((size, size), dtype=np.float64)
-            square[(size-h)//2:(size-h)//2+h, (size-w)//2:(size-w)//2+w] = arr
-            pad = size // 5
-            square = np.pad(square, pad, mode='constant', constant_values=0)
-            img_r = Image.fromarray(square.astype(np.uint8)).resize((28, 28), Image.LANCZOS)
-            arr28 = np.array(img_r, dtype=np.float64) / 255.0
-            flat  = arr28.flatten().reshape(1, -1)
+        if img_data is None or img_data[:, :, :3].max() == 0:
+            st.markdown(
+                '<div class="err-box">Canvas is empty — draw a digit first! ✏️</div>',
+                unsafe_allow_html=True
+            )
+        else:
+            with st.spinner(""):
+                flat, thumb = preprocess_canvas(img_data)
+                digit, proba = run_predict(flat)
 
-            digit, proba = run_predict(flat)
-
+            # Prediction result
             st.markdown(f"""
             <div class="pred-card">
                 <div class="pred-digit">{digit}</div>
                 <div class="pred-label">Predicted Digit</div>
             </div>""", unsafe_allow_html=True)
 
+            # 28×28 preview
             if show_28x28:
-                st.markdown('<p class="preview-label">28×28 input sent to model</p>', unsafe_allow_html=True)
-                thumb = (np.clip(arr28, 0, 1) * 255).astype(np.uint8)
-                thumb_img = Image.fromarray(cv2.resize(thumb, (112, 112), interpolation=cv2.INTER_NEAREST))
+                st.markdown('<p class="preview-label">28×28 input sent to model</p>',
+                            unsafe_allow_html=True)
+                thumb_display = (np.clip(thumb, 0, 1) * 255).astype(np.uint8)
+                thumb_img = Image.fromarray(
+                    cv2.resize(thumb_display, (112, 112),
+                               interpolation=cv2.INTER_NEAREST)
+                )
                 c1, c2, c3 = st.columns([1, 1.2, 1])
                 with c2:
                     st.image(thumb_img, width=112)
 
+            # Confidence bars
             if proba is not None:
                 bars = '<div class="conf-container"><div class="conf-title">Confidence per digit</div>'
                 for i, p in enumerate(proba):
@@ -438,12 +305,3 @@ with col_right:
                     </div>"""
                 bars += "</div>"
                 st.markdown(bars, unsafe_allow_html=True)
-        else:
-            st.markdown("""
-            <div class="err-box">
-            ⚠️ Please <b>upload an image</b> of a digit using the uploader below the canvas.<br><br>
-            <b>How to use canvas:</b><br>
-            1. Draw your digit<br>
-            2. Save the image using your browser (right-click → Save image)<br>
-            3. Upload it using the uploader
-            </div>""", unsafe_allow_html=True)
