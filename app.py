@@ -104,8 +104,8 @@ def load_model():
                 with open(path, "rb") as f:
                     return pickle.load(f)
 
-        model  = joblib.load("C:\\Users\\pc\\Desktop\Handwritten-digit-classification\\app\\mnist_scaler.pkl")
-        scaler = joblib.load("C:\\Users\\pc\\Desktop\Handwritten-digit-classification\\app\\mnist_scaler.pkl")
+        model  = joblib.load("mnist_svm_model.pkl")
+        scaler = joblib.load("mnist_scaler.pkl")
         return model, scaler, None
 
     except FileNotFoundError as e:
